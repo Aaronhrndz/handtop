@@ -1,0 +1,5 @@
+#!/bin/sh
+# Leave "Screen off".
+sudo -n /usr/local/sbin/rg35xxh-lowpower off
+wlopm --on '*'
+exec rm -f "${XDG_RUNTIME_DIR:-/tmp}/rg35xxh-screen-off"

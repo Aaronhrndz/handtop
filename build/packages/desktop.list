@@ -1,0 +1,56 @@
+# Graphics (Panfrost via Mesa)
+libgl1-mesa-dri
+libegl1
+libgles2
+# Audio
+pipewire
+pipewire-pulse
+pipewire-alsa
+wireplumber
+pavucontrol
+# Compositor and shell
+labwc
+xwayland
+waybar
+# nwg-drawer: not in trixie, built from source by 04b-nwg-drawer.sh
+wlogout
+mako-notifier
+swaybg
+xdg-utils
+wl-clipboard
+wlrctl
+grim
+slurp
+brightnessctl
+wob                      # volume / brightness bars
+swayidle                 # auto-sleep after idle (rg35xxh-autosleep)
+network-manager-gnome
+# polkit agent; without it apt picks hyprpolkitagent from backports
+lxpolkit
+blueman
+# Apps
+foot
+thunar
+mousepad
+firefox-esr
+webext-ublock-origin-firefox   # ad blocking: less RAM/CPU per page
+imv
+qpdfview
+mpv
+xarchiver
+# Themes / fonts
+adwaita-icon-theme
+fonts-noto-core
+fonts-noto-cjk
+fonts-noto-color-emoji
+# Display management (per-output scaling, screen off)
+kanshi
+wlr-randr
+wlopm
+# GSettings defaults (glib-compile-schemas)
+libglib2.0-bin
+# Input daemon (on-screen keyboard UI, notifications)
+python3-gi
+gir1.2-gtk-3.0
+gir1.2-gtklayershell-0.1
+libnotify-bin

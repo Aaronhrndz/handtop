@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!-- RG35XX H system defaults. Per-user overrides: ~/.config/labwc/rc.xml -->
+<labwc_config>
+  <core>
+    <decoration>server</decoration>
+    <gap>0</gap>
+  </core>
+
+  <theme>
+    <name></name>
+    <cornerRadius>4</cornerRadius>
+    <font place="ActiveWindow"><name>Noto Sans</name><size>9</size><weight>bold</weight></font>
+    <font place="InactiveWindow"><name>Noto Sans</name><size>9</size></font>
+    <font place="MenuItem"><name>Noto Sans</name><size>10</size></font>
+    <font place="OnScreenDisplay"><name>Noto Sans</name><size>10</size></font>
+  </theme>
+
+  <placement><policy>center</policy></placement>
+
+  <focus>
+    <followMouse>no</followMouse>
+    <raiseOnFocus>yes</raiseOnFocus>
+  </focus>
+
+  <keyboard>
+    <default />
+    <!-- Physical keyboard shortcuts -->
+    <keybind key="W-d"><action name="Execute" command="rg35xxh-drawer" /></keybind>
+    <keybind key="W-Return"><action name="Execute" command="foot" /></keybind>
+    <keybind key="W-e"><action name="Execute" command="thunar" /></keybind>
+    <keybind key="W-x"><action name="Execute" command="rg35xxh-power-menu" /></keybind>
+    <keybind key="A-F4"><action name="Close" /></keybind>
+    <keybind key="W-Up"><action name="ToggleMaximize" /></keybind>
+    <keybind key="Print"><action name="Execute" command="sh -c 'mkdir -p ~/Pictures &amp;&amp; grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png'" /></keybind>
+    <keybind key="XF86AudioRaiseVolume"><action name="Execute" command="wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+" /></keybind>
+    <keybind key="XF86AudioLowerVolume"><action name="Execute" command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-" /></keybind>
+    <keybind key="XF86AudioMute"><action name="Execute" command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" /></keybind>
+    <keybind key="XF86MonBrightnessUp"><action name="Execute" command="brightnessctl set 10%+" /></keybind>
+    <keybind key="XF86MonBrightnessDown"><action name="Execute" command="brightnessctl set 10%-" /></keybind>
+  </keyboard>
+
+  <mouse>
+    <default />
+    <!-- labwc opens the desktop menu on BOTH left and right click by default;
+         keep it on right click only so A (left click) on the desktop does nothing. -->
+    <context name="Root">
+      <mousebind button="Left" action="Press"><action name="None" /></mousebind>
+    </context>
+  </mouse>
+
+  <windowRules>
+    <!-- Small 640x480 screen: open normal windows maximized; dialogs keep their size. -->
+    <windowRule type="normal"><action name="Maximize" /></windowRule>
+  </windowRules>
+</labwc_config>

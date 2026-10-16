@@ -1,0 +1,12 @@
+[Unit]
+Description=RG35XX H hardware setup (governors, GPU clock, LEDs, rumble, audio codec)
+After=systemd-modules-load.service sound.target
+Before=display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/rg35xxh-hwinit
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

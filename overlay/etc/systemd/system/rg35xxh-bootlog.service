@@ -1,0 +1,7 @@
+[Unit]
+Description=Write a diagnostic boot log to the boot partition
+RequiresMountsFor=/boot/firmware
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/rg35xxh-bootlog

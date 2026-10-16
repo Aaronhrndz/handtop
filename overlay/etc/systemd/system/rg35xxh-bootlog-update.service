@@ -1,0 +1,7 @@
+[Unit]
+Description=Update the boot log after the desktop session started
+RequiresMountsFor=/boot/firmware
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/rg35xxh-bootlog --update

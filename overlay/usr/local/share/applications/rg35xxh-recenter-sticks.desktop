@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Re-center sticks
+Comment=Fix stick drift: measure the stick centre again (hands off the sticks)
+Exec=rg35xxh-recenter-sticks
+Icon=input-gaming
+Terminal=false
+Categories=Settings;

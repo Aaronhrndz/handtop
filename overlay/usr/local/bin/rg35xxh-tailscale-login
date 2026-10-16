@@ -1,0 +1,8 @@
+#!/bin/sh
+# Log this device in to Tailscale: shows the login link and a QR code to scan with a phone.
+# (The desktop user is Tailscale "operator", so no sudo is needed.)
+exec foot -T "Tailscale login" -W 80x30 sh -c '
+  echo "Tailscale login - scan the QR code with your phone, or open the link on any device."
+  echo
+  tailscale up --qr --timeout=10m && { echo; echo "Connected:"; tailscale ip -4; }
+  echo; printf "Press Enter (R1) to close. "; read x'

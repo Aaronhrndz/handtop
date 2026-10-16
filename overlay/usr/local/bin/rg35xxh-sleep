@@ -1,0 +1,6 @@
+#!/bin/sh
+# Put the device to sleep (light sleep, s2idle). Tap Power to wake.
+# Used by the power menu and by rg35xxh-autosleep.
+sleep 0.5            # let the power menu close first
+sync
+exec systemctl suspend

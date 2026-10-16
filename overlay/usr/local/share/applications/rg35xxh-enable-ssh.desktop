@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Enable SSH
+Comment=Set your own password and turn on the SSH server
+Exec=rg35xxh-enable-ssh
+Icon=network-server
+Terminal=false
+Categories=Network;System;

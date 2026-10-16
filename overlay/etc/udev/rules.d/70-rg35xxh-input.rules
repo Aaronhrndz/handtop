@@ -1,0 +1,4 @@
+# Input daemon runs as the desktop user (group "input"):
+# virtual devices via uinput, and the red status LED (blinks during shutdown).
+KERNEL=="uinput", SUBSYSTEM=="misc", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"
+SUBSYSTEM=="leds", KERNEL=="red:status", RUN+="/bin/chgrp input /sys%p/brightness /sys%p/trigger", RUN+="/bin/chmod g+w /sys%p/brightness /sys%p/trigger"

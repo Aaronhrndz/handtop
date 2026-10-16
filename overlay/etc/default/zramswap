@@ -1,0 +1,4 @@
+# Compressed swap in RAM (1 GB device)
+ALGO=zstd
+PERCENT=50
+PRIORITY=100

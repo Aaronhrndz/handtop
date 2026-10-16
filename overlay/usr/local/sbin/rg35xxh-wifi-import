@@ -1,0 +1,42 @@
+#!/bin/bash
+# Import Wi-Fi settings from wifi.txt on the boot partition into NetworkManager,
+# then blank the password in the file. Runs at boot (rg35xxh-wifi-import.service).
+set -uo pipefail
+WIFI_FILE="${WIFI_FILE:-/boot/firmware/wifi.txt}"
+NMCLI="${NMCLI:-nmcli}"
+IW="${IW:-iw}"
+log() { echo "rg35xxh-wifi-import: $*"; }
+
+[ -f "$WIFI_FILE" ] || { log "no $WIFI_FILE"; exit 0; }
+
+# Windows editors: strip BOM and CR.
+content="$(sed -e '1s/^\xEF\xBB\xBF//' -e 's/\r$//' "$WIFI_FILE")"
+get() { printf '%s\n' "$content" | sed -n "s/^[[:space:]]*$1[[:space:]]*=//p" | head -n1 | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | sed -E 's/^"(.*)"$/\1/'; }
+SSID="$(get SSID)"; PASSWORD="$(get PASSWORD)"; COUNTRY="$(get COUNTRY)"
+
+if [ -n "$COUNTRY" ] && command -v "$IW" >/dev/null; then
+  $IW reg set "$COUNTRY" 2>/dev/null && log "regulatory domain: $COUNTRY"
+fi
+[ -n "$SSID" ] || { log "SSID empty, nothing to import"; exit 0; }
+[ -z "$PASSWORD" ] && printf '%s\n' "$content" | grep -q '^# imported' && { log "'$SSID' already imported"; exit 0; }
+
+con="wifi-$SSID"
+if $NMCLI -t -f NAME connection show | grep -Fxq "$con"; then
+  $NMCLI connection delete "$con" >/dev/null
+fi
+if [ -n "$PASSWORD" ]; then
+  $NMCLI connection add type wifi con-name "$con" ssid "$SSID" \
+    wifi-sec.key-mgmt wpa-psk wifi-sec.psk "$PASSWORD" connection.autoconnect yes >/dev/null
+else
+  $NMCLI connection add type wifi con-name "$con" ssid "$SSID" connection.autoconnect yes >/dev/null
+fi || { log "nmcli failed for '$SSID'"; exit 1; }
+log "added connection '$con'"
+
+# Blank the password in place (the file stays, so the user can see what was imported).
+tmp="$WIFI_FILE.tmp"
+printf '%s\n' "$content" | sed -e "s/^[[:space:]]*PASSWORD[[:space:]]*=.*/PASSWORD=/" \
+  -e '/^# imported /d' > "$tmp"
+printf '# imported %s - password removed from this file; it is stored on the device\n' "$(date '+%Y-%m-%d %H:%M')" >> "$tmp"
+mv -f "$tmp" "$WIFI_FILE" && sync
+$NMCLI connection up "$con" >/dev/null 2>&1 && log "connected to '$SSID'" || log "'$SSID' not reachable now; will autoconnect"
+exit 0

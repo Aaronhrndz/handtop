@@ -1,0 +1,6 @@
+/work/
+/out/
+*.img
+*.img.gz
+*.img.xz
+__pycache__/

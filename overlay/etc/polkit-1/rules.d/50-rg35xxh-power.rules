@@ -1,0 +1,16 @@
+// RG35XX H: the desktop user (group "sudo") may power off / reboot / suspend without a password,
+// from any session (the input daemon or power menu may not run in the seat session).
+polkit.addRule(function(action, subject) {
+    var ids = ["org.freedesktop.login1.power-off",
+               "org.freedesktop.login1.power-off-multiple-sessions",
+               "org.freedesktop.login1.power-off-ignore-inhibit",
+               "org.freedesktop.login1.reboot",
+               "org.freedesktop.login1.reboot-multiple-sessions",
+               "org.freedesktop.login1.reboot-ignore-inhibit",
+               "org.freedesktop.login1.suspend",
+               "org.freedesktop.login1.suspend-multiple-sessions",
+               "org.freedesktop.login1.suspend-ignore-inhibit"];
+    if (ids.indexOf(action.id) >= 0 && subject.isInGroup("sudo")) {
+        return polkit.Result.YES;
+    }
+});

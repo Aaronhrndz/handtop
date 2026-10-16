@@ -1,0 +1,4 @@
+#!/bin/sh
+# Power menu (opened by Power tap and the panel button); toggles if already open.
+pgrep -x wlogout >/dev/null && exec pkill -x wlogout
+exec wlogout -l /etc/wlogout/layout -C /etc/wlogout/style.css -b 2 -c 12 -r 12 -m 24 -p layer-shell

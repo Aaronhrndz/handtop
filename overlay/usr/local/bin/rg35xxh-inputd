@@ -1,0 +1,4 @@
+#!/bin/sh
+# RG35XX H controls -> mouse/keyboard/gamepad. Started by the labwc session (autostart).
+export PYTHONPATH=/usr/local/lib/rg35xxh-inputd${PYTHONPATH:+:$PYTHONPATH}
+exec python3 -m rg35xxh_inputd.daemon "$@"

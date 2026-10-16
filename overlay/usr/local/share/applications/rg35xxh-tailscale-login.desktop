@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Tailscale login
+Comment=Connect this device to your tailnet (shows a QR code)
+Exec=rg35xxh-tailscale-login
+Icon=network-vpn
+Terminal=false
+Categories=Network;

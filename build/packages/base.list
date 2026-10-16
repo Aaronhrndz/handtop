@@ -1,0 +1,40 @@
+# Core system
+systemd-timesyncd
+libpam-systemd
+dbus-user-session
+polkitd
+sudo
+bash-completion
+less
+nano
+micro
+htop
+git
+curl
+wget
+xz-utils
+unzip
+file
+usbutils
+evtest
+alsa-utils
+rfkill
+iw
+wireless-regdb
+zram-tools
+# Remote access
+openssh-server
+openssh-client
+tmux
+mosh
+# Networking / Bluetooth
+network-manager
+wpasupplicant            # required by NetworkManager for Wi-Fi
+bluez
+# Python (also used by the input daemon)
+python3
+python3-venv
+pipx
+python3-evdev
+# First-boot partition resize
+cloud-guest-utils

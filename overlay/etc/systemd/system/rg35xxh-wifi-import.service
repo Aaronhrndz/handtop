@@ -1,0 +1,13 @@
+[Unit]
+Description=Import Wi-Fi settings from wifi.txt on the boot partition
+After=NetworkManager.service boot-firmware.mount
+Wants=NetworkManager.service
+RequiresMountsFor=/boot/firmware
+ConditionPathExists=/boot/firmware/wifi.txt
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/rg35xxh-wifi-import
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+[Unit]
+Description=Update the boot log 3 minutes after boot (desktop, Wi-Fi up)
+
+[Timer]
+OnBootSec=180s
+
+[Install]
+WantedBy=timers.target

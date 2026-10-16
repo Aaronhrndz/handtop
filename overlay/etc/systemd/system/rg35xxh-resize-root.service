@@ -1,0 +1,13 @@
+[Unit]
+Description=Grow the root filesystem to fill the SD card (first boot)
+ConditionPathExists=!/var/lib/rg35xxh/root-resized
+After=local-fs.target
+Before=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/rg35xxh-resize-root
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=Let the desktop user control Tailscale (operator) without sudo
+After=tailscaled.service
+Requires=tailscaled.service
+
+[Service]
+Type=oneshot
+# The tray icon and the "Tailscale login" launcher run as the desktop user.
+ExecStartPre=/bin/sh -c 'for i in $(seq 1 40); do [ -S /run/tailscale/tailscaled.sock ] && exit 0; sleep 0.5; done; exit 1'
+ExecStart=/bin/sh -c 'tailscale set --operator="$(id -nu 1000)"'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+[Unit]
+Description=Write the boot log 60 s after boot
+
+[Timer]
+OnBootSec=60s
+
+[Install]
+WantedBy=timers.target

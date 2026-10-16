@@ -1,0 +1,34 @@
+#!/bin/bash
+# Low-power state used by "Screen off": rg35xxh-lowpower on|off   (root; allowed via sudoers)
+# on : backlight off, CPU1-3 offline, powersave governors, audio DAC off, Wi-Fi power save (or off)
+# off: restore everything.
+set -uo pipefail
+. /etc/rg35xxh/lowpower.conf 2>/dev/null || true
+GPU=/sys/devices/platform/soc/1800000.gpu/devfreq/1800000.gpu
+STATE=/run/rg35xxh-lowpower
+case "${1:-}" in
+  on)
+    [ -e "$STATE" ] && exit 0
+    mkdir -p "$STATE"
+    cat /sys/devices/system/cpu/cpufreq/policy0/scaling_governor > "$STATE/cpu-gov" 2>/dev/null
+    cat "$GPU/governor" > "$STATE/gpu-gov" 2>/dev/null
+    for b in /sys/class/backlight/*/bl_power; do echo 4 > "$b"; done
+    for c in 1 2 3; do echo 0 > /sys/devices/system/cpu/cpu$c/online; done
+    echo powersave > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+    echo powersave > "$GPU/governor" 2>/dev/null
+    amixer -q -c0 sset DAC off 2>/dev/null
+    if [ "${WIFI_OFF:-no}" = yes ]; then nmcli radio wifi off
+    else for w in /sys/class/net/wl*; do iw dev "$(basename "$w")" set power_save on 2>/dev/null; done; fi
+    ;;
+  off)
+    [ -e "$STATE" ] || exit 0
+    for c in 1 2 3; do echo 1 > /sys/devices/system/cpu/cpu$c/online; done
+    cat "$STATE/cpu-gov" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null || echo schedutil > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+    cat "$STATE/gpu-gov" > "$GPU/governor" 2>/dev/null
+    amixer -q -c0 sset DAC on 2>/dev/null
+    [ "${WIFI_OFF:-no}" = yes ] && nmcli radio wifi on
+    for b in /sys/class/backlight/*/bl_power; do echo 0 > "$b"; done
+    rm -rf "$STATE"
+    ;;
+  *) echo "usage: $0 on|off" >&2; exit 2 ;;
+esac

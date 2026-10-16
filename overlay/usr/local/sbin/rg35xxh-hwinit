@@ -1,0 +1,35 @@
+#!/bin/sh
+# RG35XX H hardware setup at boot (ported from ROCKNIX H700 quirks, see docs/rocknix-quirks.md).
+
+# CPU: one policy for all four cores.
+for p in /sys/devices/system/cpu/cpufreq/policy*; do
+  [ -w "$p/scaling_governor" ] && echo schedutil > "$p/scaling_governor"
+done
+
+# GPU (Mali-G31 via Panfrost): dynamic clock (stock max 600 MHz is the default; writing max_freq
+# on this kernel triggered a PLL lock warning, so it is left alone).
+GPU=/sys/devices/platform/soc/1800000.gpu/devfreq/1800000.gpu
+if [ -d "$GPU" ]; then
+  echo simple_ondemand > "$GPU/governor" 2>/dev/null
+fi
+
+# Wi-Fi/Bluetooth radios were found soft-blocked on first boot.
+rfkill unblock wifi 2>/dev/null
+rfkill unblock bluetooth 2>/dev/null
+
+# Vibration motor on (used for the shutdown haptic).
+for f in $(find /sys/devices/platform -name rumble_enable 2>/dev/null); do
+  echo 1 > "$f"
+done
+
+# LEDs: green power LED on, red status LED off.
+[ -e /sys/class/leds/green:power/brightness ] && echo 1 > /sys/class/leds/green:power/brightness
+[ -e /sys/class/leds/red:status/brightness ] && echo 0 > /sys/class/leds/red:status/brightness
+# Audio codec: DAC + Line Out at 100% (user volume is handled by PipeWire).
+# Audio codec: DAC on, ALSA master at 100% (user volume is handled by PipeWire).
+amixer -c0 -q sset DAC on 2>/dev/null
+amixer -c0 -q sset DAC 100% 2>/dev/null      # codec mixer defaults are ~-21 dB: speaker inaudible
+amixer -c0 -q sset "Line Out" 100% on 2>/dev/null
+amixer -c0 -q sset Speaker on 2>/dev/null
+
+exit 0

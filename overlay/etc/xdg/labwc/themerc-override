@@ -1,0 +1,5 @@
+window.active.title.bg.color: #2b3a55
+window.inactive.title.bg.color: #2a2e36
+window.active.label.text.color: #ffffff
+window.inactive.label.text.color: #b8bcc4
+window.titlebar.padding.height: 2

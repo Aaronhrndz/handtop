@@ -1,0 +1,16 @@
+#!/bin/sh
+# Turn on the SSH server. The image ships with a publicly known default password,
+# so the user first sets their own password, then SSH is enabled and started.
+exec foot -T "Enable SSH" -W 80x24 sh -c '
+  if systemctl is-enabled --quiet ssh 2>/dev/null; then
+    echo "SSH is already on."
+  else
+    echo "SSH lets other computers log in to this device as \"$(id -un)\"."
+    echo "First choose your own password (current password: rg35xxh, unless you changed it)."
+    echo
+    until passwd; do echo; echo "Try again, or close this window to cancel."; done
+    echo
+    sudo systemctl enable --now ssh || { echo; printf "Failed. Press Enter (R1) to close. "; read x; exit 1; }
+  fi
+  echo; echo "Connect with:  ssh $(id -un)@$(hostname -I | cut -d" " -f1)"
+  echo; printf "Press Enter (R1) to close. "; read x'

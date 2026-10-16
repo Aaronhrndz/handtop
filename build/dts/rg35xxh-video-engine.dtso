@@ -1,0 +1,26 @@
+/dts-v1/;
+/plugin/;
+/*
+ * RG35XX H (Allwinner H700 = H616 family): Cedar video engine for the Cedrus V4L2 stateless
+ * decoder. Based on "[PATCH v3 7/7] arm64: dts: allwinner: sun50i-h616: Add video engine"
+ * (Chen-Yu Tsai, 2026-07; applied to sunxi/dt-for-7.4), with one change for this kernel:
+ *
+ *   NO "iommus" property. With the IOMMU enabled for the video engine, the display engine
+ *   (IOMMU master 0, not described as an IOMMU client in the ROCKNIX device tree) faults and
+ *   the screen stays black. Without it the decoder uses physically contiguous CMA memory;
+ *   the kernel command line reserves cma=256M (10-image.sh).
+ *
+ * Applied to the ROCKNIX DTB with fdtoverlay at image build time. Numbers instead of macros:
+ * CLK_BUS_VE=41 CLK_VE=40 CLK_MBUS_VE=51 RST_BUS_VE=5, GIC_SPI=0, IRQ_TYPE_LEVEL_HIGH=4.
+ */
+&{/soc} {
+	video-codec@1c0e000 {
+		compatible = "allwinner,sun50i-h616-video-engine";
+		reg = <0x01c0e000 0x2000>;
+		clocks = <&ccu 41>, <&ccu 40>, <&ccu 51>;
+		clock-names = "ahb", "mod", "ram";
+		resets = <&ccu 5>;
+		interrupts = <0 93 4>;
+		allwinner,sram = <&ve_sram 1>, <&sram_c 1>;
+	};
+};

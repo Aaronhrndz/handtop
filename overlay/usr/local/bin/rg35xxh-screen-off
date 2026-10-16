@@ -1,0 +1,5 @@
+#!/bin/sh
+# "Screen off" (power menu): outputs off + low-power state. Any button wakes (input daemon).
+: > "${XDG_RUNTIME_DIR:-/tmp}/rg35xxh-screen-off"
+wlopm --off '*'
+exec sudo -n /usr/local/sbin/rg35xxh-lowpower on

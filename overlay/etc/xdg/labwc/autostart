@@ -1,0 +1,18 @@
+# labwc session autostart (system default; a user file in ~/.config/labwc overrides it)
+L="$HOME/.local/state/session"; mkdir -p "$L" "$HOME/.cache"
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP >/dev/null 2>&1
+(while :; do rg35xxh-inputd >>"$L/inputd.log" 2>&1; sleep 2; done) &
+for k in volume brightness; do        # volume / brightness bars (wob)
+  f="$XDG_RUNTIME_DIR/wob-$k.sock"; [ -p "$f" ] || mkfifo "$f"
+  (tail -f "$f" | wob -c "/etc/xdg/wob/$k.ini" >"$L/wob-$k.log" 2>&1) &
+done
+swaybg -c '#1e2430' >"$L/swaybg.log" 2>&1 &
+kanshi -c /etc/xdg/kanshi/config >"$L/kanshi.log" 2>&1 &
+waybar >"$L/waybar.log" 2>&1 &
+mako >"$L/mako.log" 2>&1 &
+lxpolkit >"$L/lxpolkit.log" 2>&1 &
+nm-applet --indicator >"$L/nm-applet.log" 2>&1 &
+blueman-applet >"$L/blueman.log" 2>&1 &
+command -v tailscale >/dev/null && tailscale systray >"$L/tailscale-systray.log" 2>&1 &   # Tailscale tray icon
+. /etc/rg35xxh/power.conf 2>/dev/null   # auto-sleep after AUTOSLEEP_MINUTES without input (0 = off)
+[ "${AUTOSLEEP_MINUTES:-0}" -gt 0 ] && swayidle -w timeout $((AUTOSLEEP_MINUTES * 60)) rg35xxh-autosleep >>"$L/autosleep.log" 2>&1 &
