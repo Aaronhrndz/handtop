@@ -6,7 +6,7 @@
 - About 20 GB free disk, internet access (HTTPS to deb.debian.org, security.debian.org,
   dl.cloudsmith.io, pkgs.tailscale.com, github.com, go.dev, cdn.kernel.org, developer.arm.com).
 - On x86_64 the arm64 root filesystem is built under qemu-user emulation; an arm64 host is faster.
-- Go ≥ 1.25 for nwg-drawer (`GO_TOOLCHAIN` in `build/config.sh`, default `work/tools/go/bin/go`).
+- Go for nwg-drawer: `00-host-deps.sh` downloads the Go release pinned in `build/config.sh` (SHA-256 checked) into `work/tools/go`, on x86_64 and arm64 hosts. To use your own Go ≥ 1.25 instead, set `GO_TOOLCHAIN`.
 - Windows cannot build the image (no Linux filesystems or ARM package scripts).
 
 ## Steps

@@ -21,10 +21,22 @@ fi
 grep -q enabled /proc/sys/fs/binfmt_misc/qemu-aarch64 && echo "qemu-aarch64 binfmt: enabled"
 
 # Go toolchain (>= 1.25) for cross-compiling nwg-drawer; Ubuntu/Debian packaged Go may be too old.
-source "$(dirname "$0")/config.sh"
+# Downloads the release pinned in config.sh (SHA-256 checked) unless GO_TOOLCHAIN points to your own Go.
+source "$(dirname "$(realpath "$0")")/config.sh"
 if [ ! -x "$GO_TOOLCHAIN" ]; then
-  GOV=$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1)
+  [ "$GO_TOOLCHAIN" = "$GO_DEFAULT" ] || die "GO_TOOLCHAIN is set but not executable: $GO_TOOLCHAIN"
+  case "$(uname -m)" in
+    x86_64)  GO_ARCH=amd64; GO_SHA="$GO_SHA256_AMD64" ;;
+    aarch64) GO_ARCH=arm64; GO_SHA="$GO_SHA256_ARM64" ;;
+    *) die "no pinned Go download for host '$(uname -m)'; install Go >= 1.25 and set GO_TOOLCHAIN" ;;
+  esac
+  GO_TGZ="$WORK/tools/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz"
   mkdir -p "$WORK/tools"
-  curl -fsSL "https://go.dev/dl/${GOV}.linux-amd64.tar.gz" | tar -xz -C "$WORK/tools"
+  echo "Downloading Go ${GO_VERSION} (${GO_ARCH}) ..."
+  curl -fL --retry 3 -o "$GO_TGZ" "https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz"
+  echo "$GO_SHA  $GO_TGZ" | sha256sum -c - || { safe_rm "$GO_TGZ"; die "Go download checksum mismatch"; }
+  [ -e "$WORK/tools/go" ] && safe_rm -r "$WORK/tools/go"
+  tar -xzf "$GO_TGZ" -C "$WORK/tools"
+  safe_rm "$GO_TGZ"
 fi
 "$GO_TOOLCHAIN" version
