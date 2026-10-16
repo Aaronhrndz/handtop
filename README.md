@@ -52,6 +52,7 @@ Details: [docs/flashing.md](docs/flashing.md).
 - The device has 1 GB RAM; for heavy websites and video, Moonlight to a PC works best.
 - Hardware video decoding (H.264/HEVC) is used by Moonlight; other players decode on the CPU.
 - For streaming, 5 GHz Wi-Fi gives the smoothest result.
+- If Wi-Fi stops responding while the tray still shows it as connected, restart the device. This is a known Realtek Wi-Fi driver stall; a fix is planned for v0.1.1.
 - Bluetooth devices pair from the tray (Blueman); USB keyboards and mice work through the host port.
 - If a stick drifts, Apps → **Re-center sticks** recalibrates it.
 - Sleep uses about 5–6 % battery per hour.
