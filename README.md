@@ -4,6 +4,10 @@ A full Debian desktop for the **Anbernic RG35XX H**. It turns the handheld into 
 Linux computer: SSH, Moonlight remote desktop, Tailscale, a web browser, a terminal,
 an external monitor over mini HDMI, and everything else Debian's arm64 archive offers.
 
+<p align="center">
+  <img src="media/handheld.webp" width="560" alt="RG35XX H running Handtop: Firefox on the labwc desktop with the Waybar taskbar">
+</p>
+
 - **Hardware layer:** kernel, U-Boot, device trees and firmware from [ROCKNIX](https://github.com/ROCKNIX/distribution) `20261001` (kernel 7.2)
 - **Userspace:** Debian 13 "trixie" (arm64)
 - **Desktop:** labwc (Wayland) + Waybar + nwg-drawer + wlogout, 640×480 on the built-in screen
