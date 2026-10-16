@@ -1,7 +1,7 @@
 #!/bin/bash
 # Low-power state used by "Screen off": rg35xxh-lowpower on|off   (root; allowed via sudoers)
 # on : backlight off, CPU1-3 offline, powersave governors, audio DAC off, Wi-Fi power save (or off)
-# off: restore everything.
+# off: restore everything (Wi-Fi power save back off).
 set -uo pipefail
 . /etc/rg35xxh/lowpower.conf 2>/dev/null || true
 GPU=/sys/devices/platform/soc/1800000.gpu/devfreq/1800000.gpu
@@ -26,7 +26,8 @@ case "${1:-}" in
     cat "$STATE/cpu-gov" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null || echo schedutil > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
     cat "$STATE/gpu-gov" > "$GPU/governor" 2>/dev/null
     amixer -q -c0 sset DAC on 2>/dev/null
-    [ "${WIFI_OFF:-no}" = yes ] && nmcli radio wifi on
+    if [ "${WIFI_OFF:-no}" = yes ]; then nmcli radio wifi on
+    else for w in /sys/class/net/wl*; do iw dev "$(basename "$w")" set power_save off 2>/dev/null; done; fi   # NetworkManager default (rtw88 stalls with it on)
     for b in /sys/class/backlight/*/bl_power; do echo 0 > "$b"; done
     rm -rf "$STATE"
     ;;

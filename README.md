@@ -13,7 +13,7 @@ an external monitor over mini HDMI, and everything else Debian's arm64 archive o
 - **Desktop:** labwc (Wayland) + Waybar + nwg-drawer + wlogout, 640×480 on the built-in screen
 - **Controls:** a custom input daemon turns the gamepad into mouse + keyboard, with an on-screen keyboard
 
-Status: **v0.1.0**, first public release, developed and tested on the RG35XX H.
+Status: **v0.1.1**, developed and tested on the RG35XX H.
 
 ## Features
 
@@ -35,7 +35,7 @@ Full control map: [docs/input-mapping.md](docs/input-mapping.md).
 
 You need a microSD card (16 GB or larger) and balenaEtcher or Rufus.
 
-1. Download `handtop-<date>-v0.1.0.img.xz` and its `.sha256` from the Releases page.
+1. Download `handtop-<date>-v0.1.1.img.xz` and its `.sha256` from the Releases page.
 2. Flash the `.img.xz` directly (no need to unpack). If Windows offers to format the card afterwards, choose **Cancel**.
 3. Optional: on the `RG35XXHBOOT` drive, fill in `wifi.txt` (SSID, password, country).
 4. Put the card in the **TF1** (left) slot and power on. The first boot takes longer (the system grows to fill the card).
@@ -52,7 +52,6 @@ Details: [docs/flashing.md](docs/flashing.md).
 - The device has 1 GB RAM; for heavy websites and video, Moonlight to a PC works best.
 - Hardware video decoding (H.264/HEVC) is used by Moonlight; other players decode on the CPU.
 - For streaming, 5 GHz Wi-Fi gives the smoothest result.
-- If Wi-Fi stops responding while the tray still shows it as connected, restart the device. This is a known Realtek Wi-Fi driver stall; a fix is planned for v0.1.1.
 - Bluetooth devices pair from the tray (Blueman); USB keyboards and mice work through the host port.
 - If a stick drifts, Apps → **Re-center sticks** recalibrates it.
 - Sleep uses about 5–6 % battery per hour.
